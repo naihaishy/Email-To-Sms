@@ -53,8 +53,12 @@ def parse_last_mail(conn, lists, time_interval):
     subject = subject_de[0][0].decode(subject_de[0][1])
 
     # 解析发送人
-    sender_de = email.header.decode_header(msg.get("From"))[2][0]
-    sender = sender_de.decode("utf-8").split("<")[1].split(">")[0]
+    sender = None
+    sender_de = email.header.decode_header(msg.get("From"))
+    if len(sender_de) == 1:
+        sender = sender_de[0][0]
+    elif len(sender_de) == 2:
+        sender = sender_de[2][0].decode("utf-8").split("<")[1].split(">")[0]
 
     if sender in lists:
         print("有重要邮件达到:" + sender + subject)
